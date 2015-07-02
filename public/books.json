@@ -1,0 +1,22 @@
+[
+    {
+      "title": "boo",
+      "author": "kremer",
+      "year": "1995"
+    },
+    {
+      "title": "foo",
+      "author": "george",
+      "year": "1999"
+    },
+    {
+       "title": "boo",
+       "author": "kremer",
+       "year": "1995"
+     },
+     {
+       "title": "foo",
+       "author": "george",
+       "year": "1999"
+     }
+]

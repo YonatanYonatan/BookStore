@@ -1,0 +1,10 @@
+<div>
+
+    <form ng-submit="pageCtrl.editBook(book.id)">
+        <input class="form-control" ng-model="pageCtrl.ntitle" placeholder={{book.title}} required>
+        <input class="form-control" ng-model="pageCtrl.nauthor" placeholder={{book.author}} required>
+        <input class="form-control" ng-model="pageCtrl.nyear" placeholder={{book.year}} required>
+        <button type="submit" class="btn btn-block">Edit</button>
+    </form>
+
+</div>
