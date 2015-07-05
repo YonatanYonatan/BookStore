@@ -2,53 +2,22 @@
 
     var app = angular.module('mainModule', ['ngRoute','ui.bootstrap']);
 
-    app.service('StorageService', function(){
+    app.factory('LoadService', ['$http', function($http) {
 
-        var id = 3;
-        var books = [
-            {
-                id: 1,
-                title: "boo",
-                author: "kremer",
-                year: "1995"
-            },
-            {
-                id: 2,
-                title: "foo",
-                author: "george",
-                year: "1999"
-            }];
+        var books =  {
+                list: []
+            };
 
-        this.add = function(book){
-
-            book.id = id;
-            books.push(book);
-            id++;
-        };
-
-        this.edit = function(id, nbook){
-
-            for(i in books){
-                if (books[i].id == id){
-                    books[i] = nbook;
-                }
+        return {
+            books: books,
+            loadData: function () {
+                $http.get('/books')
+                    .then(function (booksData) {
+                        books.list = booksData.data;
+                    })
             }
-        };
-
-        this.remove = function(id){
-
-            for(i in books){
-                if (books[i].id == id){
-                    books.splice(i, 1);
-                }
-            }
-        };
-
-        this.list = function(){
-            return books;
-        };
-
-    });
+        }
+    }]);
 
     app.config(['$routeProvider','$locationProvider', function($routeProvider){
         $routeProvider
@@ -58,13 +27,15 @@
     }]);
 
 
-    app.controller('EditBookController', ['$http', function($http){
+    app.controller('EditBookController', ['$http','LoadService', function($http,LoadService){
 
         var vm = this;
+
 
         vm.title = "";
         vm.author = "";
         vm.year = "";
+        vm.link = "";
 
         vm.popover = {
             templateUrl: '/editTemplate.html',
@@ -73,102 +44,51 @@
 
         vm.submit = function(id){
 
-            $http.post('/', {"opp": "edit", "data": {"title": vm.title, "author": vm.author , "year": vm.year, "id": id}}).success(function(data) {
-
+            $http.post('/', {"opp": "edit", "data": {"title": vm.title, "author": vm.author , "year": vm.year, "id": id, "link": vm.link}}).success(function(data) {
+                LoadService.loadData();
             });
         };
     }]);
 
-    app.controller('LoadBooksController', ['$http', function($http){
+    app.controller('LoadBooksController', ['LoadService', function(LoadService){
 
         var vm = this;
-        vm.books = [];
+        LoadService.loadData();
 
-        $http.get('/books').success(function(data){
-                vm.books = data;
-        });
+        vm.books = LoadService.books;
 
     }]);
 
-    app.controller('InsertBookController', ['$http', function($http){
+    app.controller('InsertBookController', ['$http', 'LoadService', function($http,LoadService){
 
         var vm = this;
         vm.title = "";
         vm.author = "";
         vm.year = "";
+        vm.link = "";
 
         vm.submit = function(){
 
-            $http.post('/', {"opp": "insert", "data": {"title": vm.title, "author": vm.author , "year": vm.year}}).success(function(data){
-
+            $http.post('/', {"opp": "insert", "data": {"title": vm.title, "author": vm.author , "year": vm.year, "link": vm.link}}).success(function(data){
+                LoadService.loadData();
             });
 
         };
     }]);
 
-    app.controller('DeleteBookController', ['$http', function($http){
+    app.controller('DeleteBookController', ['$http','LoadService', function($http,LoadService){
 
         var vm = this;
 
         vm.submit = function(id) {
 
             $http.post('/', {"opp": "delete", "data": {"id": id}}).success(function (data) {
-
+                LoadService.loadData();
             });
         };
 
 
     }]);
-
-
-    app.controller('PageController', function (StorageService) {
-
-        var store = this;
-        store.books = StorageService.list();
-        store.queryBy = "$";
-
-        store.ntitle = "";
-        store.nauthor = "";
-        store.nyear= "";
-
-        store.editBook = function(id){
-
-            StorageService.edit(id, {title: store.ntitle, author: store.nauthor, year: store.nyear, id: id});
-        }
-
-        store.dynamicPopover = {
-            content: 'Hi!',
-            templateUrl: 'editTemplate.html',
-            title: 'Title...'
-        };
-    });
-
-    app.controller('AddBooksController', function(StorageService) {
-
-        var store = this;
-        store.books = StorageService.list();
-
-        store.newbook = {};
-
-        store.addBook = function(){
-            StorageService.add(store.newbook);
-            store.newbook = {};
-        }
-
-    });
-
-    app.controller('RemoveBooksController', function(StorageService) {
-
-        var store = this;
-
-
-        store.removeBook = function(id){
-            StorageService.remove(id);
-
-        }
-
-    });
-
 
 
 })();

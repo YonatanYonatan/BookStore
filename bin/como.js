@@ -12,25 +12,29 @@ var books =
             "title": "boo",
             "author": "kremer",
             "year": "1995",
-            "id": 1
+            "id": 1,
+            "link": "http://thrivesearch.com/wp-content/uploads/2014/08/books-clipart.png"
         },
         {
             "title": "foo",
             "author": "george",
             "year": "1991",
-            "id": 2
+            "id": 2,
+            "link": "http://thrivesearch.com/wp-content/uploads/2014/08/books-clipart.png"
         },
         {
             "title": "doo",
             "author": "koko",
             "year": "1995",
-            "id": 3
+            "id": 3,
+            "link": "http://thrivesearch.com/wp-content/uploads/2014/08/books-clipart.png"
         },
         {
             "title": "hoo",
             "author": "jerry",
             "year": "1980",
-            "id": 4
+            "id": 4,
+            "link": "http://thrivesearch.com/wp-content/uploads/2014/08/books-clipart.png"
         }
     ]
 
@@ -51,8 +55,9 @@ app.post('/', function (req, res) {
         var title = req.body.data.title;
         var author = req.body.data.author;
         var year = req.body.data.year;
+        var link = req.body.data.link;
 
-        var book = {title: title, author: author, year: year};
+        var book = {title: title, author: author, year: year, link: link};
 
         var max_id = -1;
 
@@ -92,15 +97,19 @@ app.post('/', function (req, res) {
                     books[i].year = req.body.data.year;
                 }
                 if (req.body.data.author != ""){
-                    books[i].author = req.body.data.author();
+                    books[i].author = req.body.data.author;
                 }
+                if (req.body.data.link != ""){
+                    books[i].link = req.body.data.link;
+                }
+
 
                 break;
             }
         }
     }
 
-
+    res.sendStatus(200);
 
 });
 

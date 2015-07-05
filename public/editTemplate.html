@@ -1,8 +1,9 @@
-<div ng-show="on">
+<div id="master" ng-show="on">
     <form ng-submit="editCtrl.submit(book.id)">
         <input class="form-control" ng-model="editCtrl.title" placeholder={{book.title}}>
         <input class="form-control" ng-model="editCtrl.author" placeholder={{book.author}}>
         <input class="form-control" ng-model="editCtrl.year" placeholder={{book.year}}>
+        <input class="form-control" ng-model="editCtrl.link" placeholder="Paste URL">
         <button type="submit" class="btn btn-block">Edit</button>
     </form>
 </div>
