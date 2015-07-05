@@ -18,3 +18,9 @@ select {
 
     background-color: #269abc;
 }
+
+.container  .img-responsive {
+    display: block;
+    width: auto;
+    height: 200px;
+}

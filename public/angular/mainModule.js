@@ -59,7 +59,7 @@
 
     }]);
 
-    app.controller('InsertBookController', ['$http', 'LoadService', function($http,LoadService){
+    app.controller('InsertBookController', ['$http', 'LoadService', '$location', function($http,LoadService,$location){
 
         var vm = this;
         vm.title = "";
@@ -72,6 +72,7 @@
             $http.post('/', {"opp": "insert", "data": {"title": vm.title, "author": vm.author , "year": vm.year, "link": vm.link}}).success(function(data){
                 LoadService.loadData();
             });
+            $location.path('/');
 
         };
     }]);
