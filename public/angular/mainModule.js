@@ -1,6 +1,6 @@
 (function() {
 
-    var app = angular.module('mainModule', ['ngRoute','ui.bootstrap']);
+    var app = angular.module('mainModule', ['ngRoute','ui.bootstrap','angularFileUpload']);
 
     app.factory('LoadService', ['$http', function($http) {
 
@@ -19,11 +19,27 @@
         }
     }]);
 
+    app.factory('ImageService', function(){
+
+        var cover = "";
+
+        return {
+            setCover: function (newCover) {
+                cover = newCover;
+            },
+            getCover: function (){
+                return cover;
+            }
+        };
+
+    });
+
     app.config(['$routeProvider','$locationProvider', function($routeProvider){
         $routeProvider
             .when("/", {templateUrl: "intro.html", controller: ""})
             .when("/about", {templateUrl: "about.html", controller: ""})
-            .when("/add", {templateUrl: "add.html", controller: ""});
+            .when("/add", {templateUrl: "add.html", controller: ""})
+            .when("/upload", {templateUrl: "upload.html", controller: ""});
     }]);
 
 
@@ -59,20 +75,39 @@
 
     }]);
 
-    app.controller('InsertBookController', ['$http', 'LoadService', '$location', function($http,LoadService,$location){
+    app.controller('LoadImageController', ['FileUploader','ImageService', function(FileUploader,ImageService){
+        var vm = this;
+        vm.uploader = new FileUploader();
+
+        vm.uploader.url = "http://localhost:3000/images";
+
+        vm.uploader.onAfterAddingFile = function(item){
+            ImageService.setCover(item.file.name);
+        };
+
+
+
+    }]);
+
+    app.controller('InsertBookController', ['$http', 'LoadService', 'ImageService', '$location', function($http,LoadService,ImageService,$location){
 
         var vm = this;
         vm.title = "";
         vm.author = "";
         vm.year = "";
         vm.link = "";
+        vm.cover = "";
 
         vm.submit = function(){
 
-            $http.post('/', {"opp": "insert", "data": {"title": vm.title, "author": vm.author , "year": vm.year, "link": vm.link}}).success(function(data){
+            vm.cover = ImageService.getCover();
+
+            $http.post('/', {"opp": "insert", "data": {"title": vm.title, "author": vm.author , "year": vm.year, "link": vm.link, "cover": vm.cover}}).success(function(data){
                 LoadService.loadData();
             });
             $location.path('/');
+
+           ImageService.setCover("");
 
         };
     }]);

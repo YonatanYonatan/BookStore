@@ -1,0 +1,12 @@
+<div class="form-group" ng-controller="LoadImageController as loadCtrl">
+    <div ng-if="loadCtrl.uploader">
+        <input id="file" type="file" nv-file-select uploader="loadCtrl.uploader"><br>
+        <ul>
+            <li ng-repeat="item in loadCtrl.uploader.queue">
+                Name: <span ng-bind="item.file.name"></span><br>
+                <button ng-click="item.upload()">Upload Image!</button>
+            </li>
+        </ul>
+    </div>
+
+</div>

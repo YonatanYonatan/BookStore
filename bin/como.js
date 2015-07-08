@@ -3,49 +3,82 @@
  */
 var express = require('express');
 var bodyParser = require('body-parser');
+var busboy =  require('connect-busboy');
+var fs = require('fs-extra');
 
 var app = express();
 
 var books =
     [
+        /*
         {
             "title": "boo",
             "author": "kremer",
             "year": "1995",
             "id": 1,
-            "link": "http://thrivesearch.com/wp-content/uploads/2014/08/books-clipart.png"
+            "link": "",
+            "cover": ""
         },
         {
             "title": "foo",
             "author": "george",
             "year": "1991",
             "id": 2,
-            "link": "http://thrivesearch.com/wp-content/uploads/2014/08/books-clipart.png"
+            "link": "",
+            "cover": ""
         },
         {
             "title": "doo",
             "author": "koko",
             "year": "1995",
             "id": 3,
-            "link": "http://thrivesearch.com/wp-content/uploads/2014/08/books-clipart.png"
+            "link": "",
+            "cover": ""
         },
         {
             "title": "hoo",
             "author": "jerry",
             "year": "1980",
             "id": 4,
-            "link": "http://thrivesearch.com/wp-content/uploads/2014/08/books-clipart.png"
+            "link": "",
+            "cover": ""
         }
-    ]
+        */
+    ];
 
 app.use(express.static('public'));
-
 app.use(bodyParser());
+app.use(busboy({immediate: true}));
+
+app.post('/images', function(req, res, next){
+
+    var fstream;
+
+    req.busboy.on('file', function(fieldname, file, filename){
+
+        fstream = fs.createWriteStream('./public/images/'+filename);
+        file.pipe(fstream);
+        fstream.on('close', function(){
+            console.log('upload finished for '+filename);
+        });
+
+    });
+
+    req.busboy.on('finish', function(){
+        next();
+    });
+
+    }, function(req, res){
+
+    res.sendStatus(200);
+
+});
+
 
 app.get('/books', function(req, res){
-    console.log('where are my books?');
     res.send(books);
 });
+
 
 app.post('/', function (req, res) {
 
@@ -56,8 +89,13 @@ app.post('/', function (req, res) {
         var author = req.body.data.author;
         var year = req.body.data.year;
         var link = req.body.data.link;
+        var cover = "";
 
-        var book = {title: title, author: author, year: year, link: link};
+        if (req.body.data.cover != ""){
+            cover = "http://localhost:3000/images/"+req.body.data.cover
+        }
+
+        var book = {title: title, author: author, year: year, link: link, cover: cover};
 
         var max_id = -1;
 
