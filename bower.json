@@ -1,0 +1,13 @@
+{
+  "name": "BookStore",
+  "version": "1.0.1",
+  "dependencies":
+  {
+    "angular": "latest",
+    "angular-route": "latest",
+    "angular-file-upload": "latest",
+    "jquery": "latest",
+    "bootstrap": "latest",
+    "angular-ui-bootstrap-bower": "latest"
+  }
+}

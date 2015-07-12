@@ -1,0 +1,26 @@
+.inline-header {
+    display: inline-block;
+}
+
+select {
+    background-color: #c7ddef;
+    font-size: large;
+    border-radius: 5px;
+}
+
+.search-input {
+
+    font-size: medium;
+    border-radius: 5px;
+}
+
+.searchForm {
+
+    background-color: #269abc;
+}
+
+.container  .img-responsive {
+    display: block;
+    width: auto;
+    height: 200px;
+}

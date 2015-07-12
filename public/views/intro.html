@@ -1,0 +1,53 @@
+<div class="container well searchForm">
+    <div class="row">
+        <h3><label class="label">Search By:</label></h3>
+        <div>
+            <div class="input-group col-xs-12">
+                <input type="text" class="form-control" ng-model="pageCtrl.query[pageCtrl.queryBy]" placeholder="Search">
+                        <span class="input-group-btn">
+                            <button class="btn btn-danger" type="button"><span class="glyphicon glyphicon-search"></span></button>
+                        </span>
+
+            </div>
+        </div>
+        <form>
+            <label class="radio-inline"><input type="radio" name="option" value="$" ng-model="pageCtrl.queryBy" aria-selected="true">All</label>
+            <label class="radio-inline"><input type="radio" name="option" value="title" ng-model="pageCtrl.queryBy">Title</label>
+            <label class="radio-inline"><input type="radio" name="option" value="author" ng-model="pageCtrl.queryBy">Author</label>
+            <label class="radio-inline"><input type="radio" name="option" value="year" ng-model="pageCtrl.queryBy">Year</label>
+        </form>
+
+    </div>
+
+</div>
+
+<div class="container" ng-controller="LoadBooksController as loadCtrl">
+
+    <div class="row">
+
+        <div class="col-lg-12">
+            <h1 clas="page-header">Our Books...</h1>
+        </div>
+
+        <!-- was: ng-repeat="book in loadCtrl.books.list | filter:pageCtrl.query"-->
+        <div class="thumbnail col-lg-3 col-md-4 col-xs-6" ng-repeat="book in loadCtrl.books.list">
+            <img class="img-responsive" ng-src="{{book.cover}}" alt="book cover" ng-hide="book.link">
+            <img class="img-responsive" ng-src="{{book.link}}" alt="book cover" ng-hide="book.cover">
+            <h1><kbd>{{book.title}}</kbd></h1>
+            <h5>By: {{book.author}}</h5>
+            <h5>Published: {{book.year}}</h5>
+            <h6>ID: {{book._id}}</h6>
+            <form class="btn-group-vertical center-block" ng-controller="EditBookController as editCtrl">
+                <button popover-template="editCtrl.popover.templateUrl" popover-title="{{editCtrl.popover.title}}" class="btn btn-success" ng-click="on = !on">Edit</button>
+                <button ng-controller="DeleteBookController as deleteCtrl" class="btn btn-danger" ng-click="deleteCtrl.submit(book._id)">Delete</button>
+
+            </form>
+        </div>
+    </div>
+
+    <div class="row">
+
+
+    </div>
+
+</div>
